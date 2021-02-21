@@ -1,11 +1,11 @@
 {
   "siteMetadata": {
-    "title": "Next.js Starter Blog",
+    "title": "Night Kingdom Blog",
     "author": {
-      "name": "Jose Felix",
+      "name": "Night Kingdom",
       "summary": "who works building clean user interfaces with React."
     },
-    "description": "A blog created with Next.js and Tailwind.css",
+    "description": "A blog is about Beautiful Korean Girls",
     "siteUrl": "https://nextjs-starter-blog-demo.netlify.app/",
     "language": "en-US",
     "social": {
