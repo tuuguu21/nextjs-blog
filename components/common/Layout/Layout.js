@@ -69,7 +69,7 @@ const LargeTitle = () => (
           "dark:text-white"
         )}
       >
-        Night Kingdom Blog
+        Night Kingdom Guide Blog
       </a>
     </Link>
   </h1>

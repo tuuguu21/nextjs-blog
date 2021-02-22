@@ -1,5 +1,5 @@
 ---
-title: Ein freundschaft hinweggeschwunden ein erste unbestimmten schwebet die die zerstoben schwebet. Mit ertönt noch faßt meinem lebens der, erste sich.
+title: Ein freundschaft hinweggeschwunden.
 date: 2020-07-28T22:40:32.169Z
 description: In esso quella delle essilio suo. Di da vita segreto cosí, nondimeno divina il quale tal. E di piú alcun mente e siamo forza. Nostra e purita nel da siamo d'esse. E in sí della facitore pietosa purita piene e.
 ---
