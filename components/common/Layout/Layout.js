@@ -69,7 +69,7 @@ const LargeTitle = () => (
           "dark:text-white"
         )}
       >
-        Night Kingdom Guide Blog
+        밤의제국 블러그
       </a>
     </Link>
   </h1>
@@ -84,7 +84,7 @@ const SmallTitle = () => (
           "dark:text-white"
         )}
       >
-        Night Kingdom Starter Blog
+        밤의제국 블러그
       </a>
     </Link>
   </h1>

@@ -25,7 +25,7 @@ export function Bio({ className }) {
         </a>
         <br />
         <Link href="https://opga.info">
-          <a>Go to Night Kingdom</a>
+          <a>밤의제국 바로가기</a>
         </Link>
       </p>
     </div>
