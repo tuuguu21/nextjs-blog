@@ -69,7 +69,7 @@ const LargeTitle = () => (
           "dark:text-white"
         )}
       >
-        밤의제국 블러그
+        상상을 뒤어넘는 밤의 도움이 밤의제국 블로그
       </a>
     </Link>
   </h1>
@@ -84,7 +84,7 @@ const SmallTitle = () => (
           "dark:text-white"
         )}
       >
-        밤의제국 블러그
+        당신의 밤을 책임질 밤의제국 블로그
       </a>
     </Link>
   </h1>
