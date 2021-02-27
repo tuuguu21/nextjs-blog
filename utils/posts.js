@@ -76,18 +76,18 @@ const API_URL = process.env.API_URL;
 //   return paths;
 // }
 
-export function getPostBySlug(slug) {
-  const posts = getSortedPosts();
+// export function getPostBySlug(slug) {
+//   const posts = getSortedPosts();
 
-  const postIndex = posts.findIndex(({ slug: postSlug }) => postSlug === slug);
+//   const postIndex = posts.findIndex(({ slug: postSlug }) => postSlug === slug);
 
-  const { frontmatter, content, excerpt } = posts[postIndex];
+//   const { frontmatter, content, excerpt } = posts[postIndex];
 
-  const previousPost = posts[postIndex + 1];
-  const nextPost = posts[postIndex - 1];
+//   const previousPost = posts[postIndex + 1];
+//   const nextPost = posts[postIndex - 1];
 
-  return { frontmatter, post: { content, excerpt }, previousPost, nextPost };
-}
+//   return { frontmatter, post: { content, excerpt }, previousPost, nextPost };
+// }
 
 export async function getPostsByApi() {
   const res = await fetch(

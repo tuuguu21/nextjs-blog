@@ -4,16 +4,14 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import style from "react-syntax-highlighter/dist/cjs/styles/prism/dracula";
 
 import { Layout, Image, SEO, Bio } from "@components/common";
-import { getPostBySlug, getPostsSlugs } from "@utils/posts";
+import { getPostBySlug, getPostSlugByApi, getPostsSlugs } from "@utils/posts";
 import { useRouter } from "next/router";
 
 const CONTENT_API_KEY = process.env.CONTENT_API_KEY;
 const API_URL = process.env.API_URL;
+let global_slugs = [];
 
 export default function Post({ post, frontmatter, nextPost, previousPost }) {
-  console.log(frontmatter);
-  const router = useRouter();
-  if (router.isFallback) return <Layout></Layout>;
   return (
     <Layout>
       <SEO
@@ -66,25 +64,36 @@ export default function Post({ post, frontmatter, nextPost, previousPost }) {
 
 export async function getStaticPaths() {
   // const paths = getPostsSlugs();
-
+  const res = await fetch(
+    `${API_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=slug,title`
+  );
+  const slugs = await res.json();
+  // const paths = slugs.posts.map((post) => ({
+  //   params: { slug: post.slug },
+  // }));
+  const { posts } = slugs;
+  global_slugs = [...posts];
+  const paths = posts.map((post) => ({
+    params: { slug: post.slug },
+  }));
+  console.log(posts);
+  console.log(paths);
   return {
-    paths: [],
-    fallback: true,
+    paths,
+    fallback: false,
   };
 }
 
 export async function getStaticProps({ params: { slug } }) {
   // const postData = getPostBySlug(slug);
   const postData = await getPost(slug);
-
   if (!postData.previousPost) {
     postData.previousPost = null;
   }
-
   if (!postData.nextPost) {
     postData.nextPost = null;
   }
-  return { props: postData, revalidate: 10 };
+  return { props: postData };
 }
 
 async function getPost(slug) {
@@ -93,6 +102,10 @@ async function getPost(slug) {
       `${API_URL}/ghost/api/v3/content/posts/slug/${slug}?key=${CONTENT_API_KEY}&fields=title,slug,html,feature_image,published_at,custom_excerpt`
     ).then((r) => r.json());
     const { posts } = res;
+    const index = global_slugs.findIndex((sl) => sl.slug === posts[0].slug);
+    console.log("global_slugs =", global_slugs);
+    console.log("posts =", posts);
+    console.log("index =", index);
     const data = {
       post: {
         excerpt: posts[0].custom_excerpt,
@@ -103,6 +116,14 @@ async function getPost(slug) {
         description: posts[0].custom_excerpt,
         date: posts[0].published_at,
       },
+      // previousPost: {
+      //   slug: "",
+      //   frontmatter: { title: "" },
+      // },
+      // nextPost: {
+      //   slug: "",
+      //   frontmatter: { title: "" },
+      // },
     };
     return data;
   } catch (error) {
