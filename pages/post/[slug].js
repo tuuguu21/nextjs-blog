@@ -5,8 +5,15 @@ import style from "react-syntax-highlighter/dist/cjs/styles/prism/dracula";
 
 import { Layout, Image, SEO, Bio } from "@components/common";
 import { getPostBySlug, getPostsSlugs } from "@utils/posts";
+import { useRouter } from "next/router";
+
+const CONTENT_API_KEY = process.env.CONTENT_API_KEY;
+const API_URL = process.env.API_URL;
 
 export default function Post({ post, frontmatter, nextPost, previousPost }) {
+  console.log(frontmatter);
+  const router = useRouter();
+  if (router.isFallback) return <Layout></Layout>;
   return (
     <Layout>
       <SEO
@@ -19,7 +26,9 @@ export default function Post({ post, frontmatter, nextPost, previousPost }) {
           <h2 className="mb-2 text-6xl font-black leading-none font-display">
             {frontmatter.title}
           </h2>
-          <p className="text-sm">{frontmatter.date}</p>
+          <p className="text-sm">
+            {new Date(frontmatter.date).toLocaleString("ko-KR")}
+          </p>
         </header>
         <ReactMarkdown
           className="mb-4 prose lg:prose-lg dark:prose-dark"
@@ -56,16 +65,17 @@ export default function Post({ post, frontmatter, nextPost, previousPost }) {
 }
 
 export async function getStaticPaths() {
-  const paths = getPostsSlugs();
+  // const paths = getPostsSlugs();
 
   return {
-    paths,
-    fallback: false,
+    paths: [],
+    fallback: true,
   };
 }
 
 export async function getStaticProps({ params: { slug } }) {
-  const postData = getPostBySlug(slug);
+  // const postData = getPostBySlug(slug);
+  const postData = await getPost(slug);
 
   if (!postData.previousPost) {
     postData.previousPost = null;
@@ -74,8 +84,30 @@ export async function getStaticProps({ params: { slug } }) {
   if (!postData.nextPost) {
     postData.nextPost = null;
   }
+  return { props: postData, revalidate: 10 };
+}
 
-  return { props: postData };
+async function getPost(slug) {
+  try {
+    const res = await fetch(
+      `${API_URL}/ghost/api/v3/content/posts/slug/${slug}?key=${CONTENT_API_KEY}&fields=title,slug,html,feature_image,published_at,custom_excerpt`
+    ).then((r) => r.json());
+    const { posts } = res;
+    const data = {
+      post: {
+        excerpt: posts[0].custom_excerpt,
+        content: posts[0].html,
+      },
+      frontmatter: {
+        title: posts[0].title,
+        description: posts[0].custom_excerpt,
+        date: posts[0].published_at,
+      },
+    };
+    return data;
+  } catch (error) {
+    return error.message[0];
+  }
 }
 
 const CodeBlock = ({ language, value }) => {

@@ -1,77 +1,80 @@
-import matter from "gray-matter";
-import fs from "fs";
+// import matter from "gray-matter";
+// import fs from "fs";
 
-export function getPostsFolders() {
-  // Get all posts folders located in `content/posts`
-  const postsFolders = fs
-    .readdirSync(`${process.cwd()}/content/posts`)
-    .map((folderName) => ({
-      directory: folderName,
-      filename: `${folderName}.md`,
-    }));
+const CONTENT_API_KEY = process.env.CONTENT_API_KEY;
+const API_URL = process.env.API_URL;
 
-  return postsFolders;
-}
+// export function getPostsFolders() {
+//   // Get all posts folders located in `content/posts`
+//   const postsFolders = fs
+//     .readdirSync(`${process.cwd()}/content/posts`)
+//     .map((folderName) => ({
+//       directory: folderName,
+//       filename: `${folderName}.md`,
+//     }));
 
-// Get day in format: Month day, Year. e.g. April 19, 2020
-function getFormattedDate(date) {
-  const options = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    weekday: "long",
-  };
-  const formattedDate = date.toLocaleDateString("ko-KR", options);
+//   return postsFolders;
+// }
 
-  return formattedDate;
-}
+// // Get day in format: Month day, Year. e.g. April 19, 2020
+// function getFormattedDate(date) {
+//   const options = {
+//     year: "numeric",
+//     month: "short",
+//     day: "numeric",
+//     weekday: "long",
+//   };
+//   const formattedDate = date.toLocaleDateString("ko-KR", options);
 
-export function getSortedPosts() {
-  const postFolders = getPostsFolders();
+//   return formattedDate;
+// }
 
-  const posts = postFolders
-    .map(({ filename, directory }) => {
-      // Get raw content from file
-      const markdownWithMetadata = fs
-        .readFileSync(`content/posts/${directory}/${filename}`)
-        .toString();
+// export function getSortedPosts() {
+//   const postFolders = getPostsFolders();
 
-      // Parse markdown, get frontmatter data, excerpt and content.
-      const { data, excerpt, content } = matter(markdownWithMetadata);
+//   const posts = postFolders
+//     .map(({ filename, directory }) => {
+//       // Get raw content from file
+//       const markdownWithMetadata = fs
+//         .readFileSync(`content/posts/${directory}/${filename}`)
+//         .toString();
 
-      const frontmatter = {
-        ...data,
-        date: getFormattedDate(data.date),
-      };
+//       // Parse markdown, get frontmatter data, excerpt and content.
+//       const { data, excerpt, content } = matter(markdownWithMetadata);
 
-      // Remove .md file extension from post name
-      const slug = filename.replace(".md", "");
+//       const frontmatter = {
+//         ...data,
+//         date: getFormattedDate(data.date),
+//       };
 
-      return {
-        slug,
-        frontmatter,
-        excerpt,
-        content,
-      };
-    })
-    .sort(
-      (a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date)
-    );
+//       // Remove .md file extension from post name
+//       const slug = filename.replace(".md", "");
 
-  return posts;
-}
+//       return {
+//         slug,
+//         frontmatter,
+//         excerpt,
+//         content,
+//       };
+//     })
+//     .sort(
+//       (a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date)
+//     );
 
-export function getPostsSlugs() {
-  const postFolders = getPostsFolders();
+//   return posts;
+// }
 
-  const paths = postFolders.map(({ filename }) => ({
-    params: {
-      slug: filename.replace(".md", ""),
-    },
-  }));
+// export function getPostsSlugs() {
+//   const postFolders = getPostsFolders();
 
-  return paths;
-}
+//   const paths = postFolders.map(({ filename }) => ({
+//     params: {
+//       slug: filename.replace(".md", ""),
+//     },
+//   }));
+
+//   return paths;
+// }
 
 export function getPostBySlug(slug) {
   const posts = getSortedPosts();
@@ -84,4 +87,21 @@ export function getPostBySlug(slug) {
   const nextPost = posts[postIndex - 1];
 
   return { frontmatter, post: { content, excerpt }, previousPost, nextPost };
+}
+
+export async function getPostsByApi() {
+  const res = await fetch(
+    `${API_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=title,custom_excerpt,published_at,slug`
+  ).then((r) => r.json());
+
+  const posts = res.posts.map((post) => ({
+    frontmatter: {
+      title: post.title,
+      description: post.custom_excerpt,
+      date: post.published_at,
+    },
+    slug: post.slug,
+  }));
+
+  return posts;
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Layout, Bio, SEO } from "@components/common";
-import { getSortedPosts } from "@utils/posts";
+import { getSortedPosts, getPostsByApi } from "@utils/posts";
 
 export default function Home({ posts }) {
   return (
@@ -18,7 +18,9 @@ export default function Home({ posts }) {
                 </a>
               </Link>
             </h2>
-            <span className="text-sm">{date}</span>
+            <span className="text-sm">
+              {new Date(date).toLocaleString("ko-KR")}
+            </span>
           </header>
           <section>
             <p className="mb-8 text-lg">{description}</p>
@@ -30,7 +32,7 @@ export default function Home({ posts }) {
 }
 
 export async function getStaticProps() {
-  const posts = getSortedPosts();
+  const posts = await getPostsByApi();
 
   return {
     props: {
