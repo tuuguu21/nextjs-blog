@@ -91,7 +91,7 @@ const API_URL = process.env.API_URL;
 
 export async function getPostsByApi() {
   const res = await fetch(
-    `${API_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=title,custom_excerpt,published_at,slug`
+    `${API_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=title,custom_excerpt,published_at,slug&limit=all`
   ).then((r) => r.json());
 
   const posts = res.posts.map((post) => ({
