@@ -9,7 +9,7 @@ import Paginate from "../components/common/Posts/Paginate";
 
 export default function Home({ posts }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(10);
+  const [postsPerPage, setPostsPerPage] = useState(15);
 
   // Get current posts
   const indexOfLastPost = currentPage * postsPerPage;
