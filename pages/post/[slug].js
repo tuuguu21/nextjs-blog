@@ -65,7 +65,7 @@ export default function Post({ post, frontmatter, nextPost, previousPost }) {
 export async function getStaticPaths() {
   // const paths = getPostsSlugs();
   const res = await fetch(
-    `${API_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=slug,title`
+    `${API_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=slug,title&limit=all`
   );
   const slugs = await res.json();
   // const paths = slugs.posts.map((post) => ({
