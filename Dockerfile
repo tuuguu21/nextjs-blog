@@ -10,8 +10,6 @@ RUN npm install
 
 COPY . /usr/src/app
 
-RUN npm run build 
-
 EXPOSE 8080
 
 CMD "npm" "run" "deploy"
