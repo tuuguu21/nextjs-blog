@@ -24,7 +24,7 @@ export function Bio({ className }) {
           Follow him on twitter
         </a>
         <br />
-        <Link href="https://opga.info">
+        <Link href="https://bamje1.com">
           <a>밤의제국 바로가기</a>
         </Link>
       </p>
